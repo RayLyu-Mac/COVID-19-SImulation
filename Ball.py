@@ -2,6 +2,7 @@ import pygame
 import random 
 import time
 RE=False
+economy=0
 red = (255,0,0)
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
@@ -41,53 +42,55 @@ def chance (kind, probabilitys):
         for _ in range (times):
             sets.append(Type[k])
         k=k+1
-    choice=sets[random.randint(0,base)-1]
+    choice=sets[random.randint(0,base)-2]
     return (choice)
 
-WIDTH=1400
-HEIGHT=1000
+WIDTH=1200
+HEIGHT=780
 Ready=False
 click=False
 side=40
+
 def intro_memu():
     R=True
     pygame.init()
     global population
     global disease
     global T
+    global POL
     global Start_population
     global Start_infection
+    global Am
+    
+    Am=False
+
     screen=pygame.display.set_mode((WIDTH,HEIGHT))
     pygame.display.set_caption("Start Menu")
     global Ready
     while R:
         click=False
         screen.fill((255,255,255))
-
         mouse_x,mouse_y=pygame.mouse.get_pos()
-
-        message('Simulation of COVID-19',WIDTH/2,HEIGHT/2-120,70,screen)
+        message('Simulation of COVID-19',WIDTH/2,HEIGHT/2-200,70,screen)
         message('By:Ray Lyu',WIDTH-side,HEIGHT-side/2-20,10,screen)
-        message('Press Space to Start',WIDTH/2,HEIGHT/2+40,40,screen)
-
-        Button_1=pygame.Rect(WIDTH/2-420,HEIGHT/2+110,200,50)
-        Button_2=pygame.Rect(WIDTH/2-100,HEIGHT/2+110,200,50)
-        Button_3=pygame.Rect(WIDTH/2+220,HEIGHT/2+110,200,50)
-        message('Small Population',WIDTH/2-330,HEIGHT/2+180,20,screen)
-        message('Medium Population',WIDTH/2-10,HEIGHT/2+180,20,screen)
-        message('Large Population',WIDTH/2+330,HEIGHT/2+180,20,screen)
-
+        message('Press Space to Start',WIDTH/2,HEIGHT/2-40,40,screen)
+        Button_1=pygame.Rect(WIDTH/2-420,HEIGHT/2+70,200,50)
+        Button_2=pygame.Rect(WIDTH/2-100,HEIGHT/2+70,200,50)
+        Button_3=pygame.Rect(WIDTH/2+220,HEIGHT/2+70,200,50)
+        message('Small Population',WIDTH/2-330,HEIGHT/2+130,20,screen)
+        message('Medium Population',WIDTH/2-10,HEIGHT/2+130,20,screen)
+        message('Large Population',WIDTH/2+330,HEIGHT/2+130,20,screen)
         if Button_1.collidepoint((mouse_x,mouse_y)):
-            population=30
-            Start_population=30
+            population=150
+            Start_population=150
             pygame.draw.rect(screen,(200,200,200),Button_1)
         else:
             pygame.draw.rect(screen,(55,255,55),Button_1)
     
 
         if Button_2.collidepoint((mouse_x,mouse_y)):
-            population=40
-            Start_population=40
+            population=75
+            Start_population=75
             pygame.draw.rect(screen,(200,200,200),Button_2)
         else:
             pygame.draw.rect(screen,(55,205,55),Button_2)
@@ -95,63 +98,82 @@ def intro_memu():
 
         
         if Button_3.collidepoint((mouse_x,mouse_y)):
-            population=75
-            Start_population=75
+            population=100
+            Start_population=100
             pygame.draw.rect(screen,(200,200,200),Button_3)
         else:
             pygame.draw.rect(screen,(55,155,55),Button_3)
 
 
 
-        Button_4=pygame.Rect(WIDTH/2-420,HEIGHT/2+230,200,50)
-        Button_5=pygame.Rect(WIDTH/2-100,HEIGHT/2+230,200,50)
-        Button_6=pygame.Rect(WIDTH/2+220,HEIGHT/2+230,200,50)
-        message('Disease=2',WIDTH/2-330,HEIGHT/2+300,20,screen)
-        message('Disease=3',WIDTH/2-10,HEIGHT/2+300,20,screen)
-        message('Disease=4',WIDTH/2+330,HEIGHT/2+300,20,screen)
+        Button_4=pygame.Rect(WIDTH/2-500,HEIGHT/2+180,200,50)
+        Button_5=pygame.Rect(WIDTH/2-230,HEIGHT/2+180,200,50)
+        Button_6=pygame.Rect(WIDTH/2+60,HEIGHT/2+180,200,50)
+        Button_10=pygame.Rect(WIDTH/2+340,HEIGHT/2+180,200,50)
+        message('Policy Control: None',WIDTH/2-400,HEIGHT/2+250,20,screen)
+        message('Policy Control: Lev I',WIDTH/2-140,HEIGHT/2+250,20,screen)
+        message('Policy Control: Lev II',WIDTH/2+160,HEIGHT/2+250,20,screen)
+        message('Policy Control: Restricted',WIDTH/2+450,HEIGHT/2+250,20,screen)
 
         if Button_4.collidepoint((mouse_x,mouse_y)):
-            disease=2
-            Start_infection=2
+            POL=0.1
+            disease=4
+            Start_infection=3
             pygame.draw.rect(screen,(200,200,200),Button_4)
         else:
             pygame.draw.rect(screen,(255,55,55),Button_4)
         if Button_5.collidepoint((mouse_x,mouse_y)):
+            POL=0.4
             disease=3
             Start_infection=3
             pygame.draw.rect(screen,(200,200,200),Button_5)
         else:
             pygame.draw.rect(screen,(205,55,55),Button_5)
         if Button_6.collidepoint((mouse_x,mouse_y)):
-            disease=4
-            Start_infection=4
+            POL=0.7
+            disease=3
+            Start_infection=3
             pygame.draw.rect(screen,(200,200,200),Button_6)
         else:
             pygame.draw.rect(screen,(155,55,55),Button_6)
+        if Button_10.collidepoint((mouse_x,mouse_y)):
+            POL=0.9
+            disease=3
+            Start_infection=3
+            pygame.draw.rect(screen,(200,200,200),Button_10)
+        else:
+            pygame.draw.rect(screen,(155,55,55),Button_10)
 
     
 
-        Button_7=pygame.Rect(WIDTH/2-420,HEIGHT/2+345,200,50)
-        Button_8=pygame.Rect(WIDTH/2-100,HEIGHT/2+345,200,50)
-        Button_9=pygame.Rect(WIDTH/2+220,HEIGHT/2+345,200,50)
-        message('Time=1500 Days',WIDTH/2-330,HEIGHT/2+415,20,screen)
-        message('Time=2000 Days',WIDTH/2-10,HEIGHT/2+415,20,screen)
-        message('Time=2500 Days',WIDTH/2+330,HEIGHT/2+415,20,screen)
+        Button_7=pygame.Rect(WIDTH/2-420,HEIGHT/2+295,200,50)
+        Button_8=pygame.Rect(WIDTH/2-100,HEIGHT/2+295,200,50)
+        Button_9=pygame.Rect(WIDTH/2+220,HEIGHT/2+295,200,50)
+        message('Time=1500 Days',WIDTH/2-330,HEIGHT/2+365,20,screen)
+        message('Time=2000 Days',WIDTH/2-10,HEIGHT/2+365,20,screen)
+        message('Time=2500 Days',WIDTH/2+330,HEIGHT/2+365,20,screen)
+
+        Button_12=pygame.Rect(WIDTH/2-420,HEIGHT/2-80,200,50)
+        message('America',WIDTH/2-330,HEIGHT/2,20,screen)
     
     
-        
+        if Button_12.collidepoint((mouse_x,mouse_y)):
+            Am=True
+            pygame.draw.rect(screen,(200,200,200),Button_12)
+        else:
+            pygame.draw.rect(screen,(55,55,255),Button_12)
         if Button_7.collidepoint((mouse_x,mouse_y)):
-            T=500
+            T=1000
             pygame.draw.rect(screen,(200,200,200),Button_7)
         else:
             pygame.draw.rect(screen,(55,55,255),Button_7)
         if Button_8.collidepoint((mouse_x,mouse_y)):
-            T=2000
+            T=2200
             pygame.draw.rect(screen,(200,200,200),Button_8)
         else:
             pygame.draw.rect(screen,(55,55,205),Button_8)
         if Button_9.collidepoint((mouse_x,mouse_y)):
-            T=2700
+            T=3500
             pygame.draw.rect(screen,(200,200,200),Button_9)
         else:
             pygame.draw.rect(screen,(55,55,155),Button_9)
@@ -220,7 +242,7 @@ class player():
         self.vx=vx
         self.vy=vy
         self.present=True
-        self.frame=10+social_distance
+        self.frame=4+social_distance
         self.health=health
         self.S=S
     def move(self):
@@ -241,7 +263,7 @@ class Crazy_1():
         self.vx=vx
         self.vy=vy
         self.present=True
-        self.frame=6+social_distance
+        self.frame=1+social_distance
     def move(self):
         self.x+=self.vx
         self.y+=self.vy
@@ -262,7 +284,7 @@ class Mask_1():
         self.x=x
         self.y=y
         self.frame=8+social_distance
-        self.defense=25
+        self.defense=26
     def draw(self,screen):
         screen.blit(sportImage,(self.x,self.y))
 
@@ -319,14 +341,15 @@ def Update():
 
 
 times=[]
-adjustment=0.9
+adjustment=2.4
 timecollection=[]
 SiTs=[]
 Disease_dead=[]
-event_sdate=[200,650,1150,1600,2000]
-event_edate=[550,1000,1500,1900,2450]
+event_sdate=[200,400,690,900,1200,1450,1850]
+event_edate=[350,600,850,1100,1350,1750,2120]
 #Main Loop
 #game_intro()
+print(POL)
 K=False
 EDGE=18
 Stay_athome=False
@@ -337,66 +360,83 @@ try:
     if Ready:
         print('start')
         for time in range(T):
-            if (time>event_sdate[0] and time <event_edate[0]) or (time>event_sdate[1] and time <event_edate[1])or (time>event_sdate[2] and time <event_edate[2])or (time>event_sdate[3] and time <event_edate[3]):
-                Disease_period=170
-                if time==event_sdate[0]+1 or time==event_sdate[1]+1 or time==event_sdate[2]+1 or time==event_sdate[3]+1:
+            if (time>event_sdate[0] and time <event_edate[0]) or (time>event_sdate[1] and time <event_edate[1])or (time>event_sdate[2] and time <event_edate[2])or (time>event_sdate[3] and time <event_edate[3])or (time>event_sdate[4] and time <event_edate[4]) or (time>event_sdate[5] and time <event_edate[5]):                
+                Disease_period=180
+                if (time>event_sdate[5] and time <event_edate[5]):
+                    if Am and POL==0.9:
+                        POL=0
+                    elif Am and POL==0.7:
+                        POL=0.2
+                    else:
+                        pass
+                else:
+                    pass
+                if time==event_sdate[0]+1 or time==event_sdate[1]+1 or time==event_sdate[2]+1 or time==event_sdate[3]+1 or time==event_sdate[4]+1 or time==event_sdate[5]+1:
                     K=True 
+                else:
+                    pass
                 if K:
-                    event=chance(3,[0.4,0.3,0.3])
+                    event=chance(3,[0.2,0.8-POL,POL])
+                    print(POL)
                     K=False
                 if event=='a':
-                    screen.fill((100,100,255))
-                    message('Intermediate Control',WIDTH/2,EDGE*2,40,screen)
+                    screen.fill((255,155,0))
+                    economy+=round(18.5*population/10)
+                    message('Orange Restrict GDP:{}'.format(economy),WIDTH/2,EDGE*2,40,screen)
                     social_distance=10
-                    SpeedL=2
-                    SpeedU=2.1
-                    PartyChance=0.25
-                    QuaratineChance=0.35
-                    DisaseChance=0.4
-                    Disease_DeadChance=0.05
-                    Disease_ImmuneChance=0.5
+                    SpeedL=1.8
+                    SpeedU=2
+                    PartyChance=0.3
+                    QuaratineChance=0.5
+                    DisaseChance=0.2
+                    Disease_DeadChance=0.15
+                    Disease_ImmuneChance=0.4
                     Disease_n=0.45
                     Policy_Control=True
                 elif event=='b':
                     Policy_Control=False
-                    screen.fill((255,100,100))
-                    message('No Control',WIDTH/2,50,40,screen)
+                    screen.fill((255,255,255))
+                    economy+=round(17.5*population/10)
+                    message('No Control GDP:{}'.format(economy),WIDTH/2,50,40,screen)
                     social_distance=-5
-                    SpeedL=4
-                    SpeedU=4.4
-                    PartyChance=0.7
-                    QuaratineChance=0.1
-                    DisaseChance=0.2
-                    Disease_DeadChance=0.3
-                    Disease_ImmuneChance=0.2
-                    Disease_n=0.5
+                    SpeedL=5.6
+                    SpeedU=5.9                    
+                    PartyChance=0.55
+                    QuaratineChance=0.05
+                    DisaseChance=0.4
+                    Disease_DeadChance=0.25
+                    Disease_ImmuneChance=0.1
+                    Disease_n=0.65
                 elif event=='c':
-                    screen.fill((100,255,100))
-                    message('Social Distance',WIDTH/2,50,40,screen)
+                    screen.fill((192,192,192))
+                    economy+=round(4.5*population/10)
+                    message('Grey Lock Down GDP:{}'.format(economy),WIDTH/2,50,40,screen)
                     social_distance=25
-                    SpeedL=0.6
-                    SpeedU=0.8
+                    SpeedL=0
+                    SpeedU=0.005
                     Stay_athome=True
-                    PartyChance=0.1
-                    QuaratineChance=0.8
-                    DisaseChance=0.1
+                    PartyChance=0
+                    QuaratineChance=0.91
+                    DisaseChance=0.09
                     Disease_DeadChance=0.025
-                    Disease_ImmuneChance=0.625
-                    Disease_n=0.35
+                    Disease_ImmuneChance=0.875
+                    Disease_n=0.1
                     Policy_Control=True
             else:
-                screen.fill((255,255,255))
+                
+                screen.fill((102,255,89))
+                economy+=round(23*population/10)
                 social_distance=0
-                message('Normal Situation',WIDTH/2,50,40,screen)
-                PartyChance=0.3
-                QuaratineChance=0.2
+                message('Green Prevent GDP:{}'.format(economy),WIDTH/2,50,40,screen)
+                PartyChance=0.1
+                QuaratineChance=0.4
                 DisaseChance=0.5
-                Disease_DeadChance=0.1
-                Disease_ImmuneChance=0.5
+                Disease_DeadChance=0.2
+                Disease_ImmuneChance=0.4
                 Disease_n=0.4
                 EDGE=24
-                SpeedL=3
-                SpeedU=3.1
+                SpeedL=2.2
+                SpeedU=2.4
                 Disease_period=380
                 Policy_Control=True
 
@@ -414,7 +454,7 @@ try:
                 playervx=random.uniform(SpeedL,SpeedU)
                 playervy=random.uniform(SpeedL,SpeedU)
                 if RE:
-                    players.append(player(playerx,playery,playervx,playervy,200,True))
+                    players.append(player(playerx,playery,playervx,playervy,430,True))
                     RE=False
                 else:
                     players.append(player(playerx,playery,playervx,playervy,40,False))
@@ -466,7 +506,9 @@ try:
                                 D.vx*=-1
                             if D.y<d.y+d.frame and D.y>d.y-d.frame:
                                 D.vy*=-1
-                
+            if De>round(totalP*0.55):
+                economy-=60
+                print("Collapse")
             for P in players:
                 '''if P.x<0 or P.x>WIDTH or P.y<0 or P.y>HEIGHT:
                     players.pop(players.index(P))'''
@@ -495,9 +537,9 @@ try:
                         P.vy*=-1
                 for c in Crazys:
                     if (P.x<c.x+c.frame and P.x>c.x-c.frame) or (P.y<c.y+c.frame and P.y>c.y-c.frame):
-                        P.health-=5
+                        P.health-=7
                 if Stay_athome:
-                    P.health+=80
+                    P.health+=255
                     Stay_athome=False
 
                 if P.health==0 or P.health<0:
@@ -514,6 +556,7 @@ try:
                         timecollection.append(time)
                     else:
                         disease+=1
+                        economy-=750
                         population-=1
                         Disease_dead.append(time)
 
@@ -521,7 +564,7 @@ try:
             for recover in timecollection:
                 if (time-recover)>Disease_period:
                     if len(Masks)!=0:
-                        prob=chance(3,[0.8,0.1,0.1])
+                        prob=chance(3,[0.9,0.05,0.05])
                         if prob=='a':
                             Masks.pop(0)
                             mask-=1
@@ -529,6 +572,7 @@ try:
                             timecollection.pop(timecollection.index(recover))
                             population+=1
                             immune+=1
+                            economy+=100
                         elif prob=='b':
                             Deadsx=Masks[0].x
                             Deadsy=Masks[0].y
@@ -536,6 +580,7 @@ try:
                             mask-=1
                             timecollection.pop(timecollection.index(recover))
                             De+=1
+                            economy-=2350
 
                         else:
                             pass
@@ -544,7 +589,7 @@ try:
             for Dead in SiTs:
                 if (time-Dead)>Disease_period:
                     if len(Crazys)!=0:
-                        prob=chance(3,[0.4,0.3,0.3])
+                        prob=chance(3,[0.65,0.2,0.15])
                         if prob=='a':
                             Deadsx=Crazys[0].x
                             Deadsy=Crazys[0].y
@@ -552,6 +597,7 @@ try:
                             Crazys.pop(0)
                             crazy-=1
                             De+=1
+                            economy-=2450
                         elif prob=='b':
                             SiTs.pop(SiTs.index(Dead))
                             Crazys.pop(0)
@@ -572,11 +618,14 @@ try:
                             Diseases.pop(0)
                             Disease_dead.pop(Disease_dead.index(dd))
                             disease-=1
+                            
                             De+=1
+                            economy-=2450
                         elif prob=='b':
                             Diseases.pop(0)
                             Disease_dead.pop(Disease_dead.index(dd))
                             disease-=1
+                            economy+=100
                             population+=1
                             RE=True
                             immune+=1
@@ -606,12 +655,12 @@ def result():
             screen.fill((255,255,255))
             message('Final Result',WIDTH/2,HEIGHT/2-200,100,screen)
             message('Suriver:'+str(population),WIDTH/2,HEIGHT/2+50,50,screen)
-            message('Infected:'+str(len(Diseases)),WIDTH/2,HEIGHT/2+100,50,screen)
-            message('Quaratine:'+str(mask),WIDTH/2,HEIGHT/2+150,50,screen)
-            message('Party People:'+str(crazy),WIDTH/2,HEIGHT/2+200,50,screen)
+            message('Economy:'+str(economy),WIDTH/2,HEIGHT/2-50,50,screen)
+            message('Immune:'+str(immune),WIDTH/2,HEIGHT/2+100,50,screen)
+            
             message('Dead:'+str(De),WIDTH/2,HEIGHT/2+260,50,screen)
-            message('Starting Population:'+str(Start_population),WIDTH/2,HEIGHT/2-50,50,screen)
-            message('Starting Infection:'+str(Start_infection),WIDTH/2,HEIGHT/2,50,screen)
+            message('Starting Population:'+str(Start_population),WIDTH/2,HEIGHT/2,50,screen)
+            
             message('Time Period:{} Days'.format(str(T)),WIDTH/2,HEIGHT/2-100,50,screen)
             pygame.display.update()
     except Exception as e:
